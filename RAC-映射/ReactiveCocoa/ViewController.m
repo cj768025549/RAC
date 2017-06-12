@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
+#import "ReactiveObjC.h"
 #import "RACReturnSignal.h"
 
 //**RAC-bind**
@@ -23,6 +23,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     [self flattenMap2];
+    [self map];
     
   }
 
@@ -44,17 +45,12 @@
 
 }
 
-
 - (void)flatMap {
     // 创建信号
     RACSubject *subject = [RACSubject subject];
     // 绑定信号
-    RACSignal *bindSignal = [subject flattenMap:^RACStream *(id value) {
-        // block：只要源信号发送内容就会调用
-        // value: 就是源信号发送的内容
-        // 返回信号用来包装成修改内容的值
+    RACSignal *bindSignal = [subject flattenMap:^__kindof RACSignal * _Nullable(id  _Nullable value) {
         return [RACReturnSignal return:value];
-        
     }];
     
     // flattenMap中返回的是什么信号，订阅的就是什么信号(那么，x的值等于value的值，如果我们操纵value的值那么x也会随之而变)
@@ -94,7 +90,7 @@
     //        NSLog(@"%@", x);
     //    }];
     // 方式4--------也是开发中常用的
-    [[signalofSignals flattenMap:^RACStream *(id value) {
+    [[signalofSignals flattenMap:^__kindof RACSignal * _Nullable(id  _Nullable value) {
         return value;
     }] subscribeNext:^(id x) {
         NSLog(@"%@", x);
