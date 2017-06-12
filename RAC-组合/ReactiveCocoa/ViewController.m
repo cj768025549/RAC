@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
-#import "RACReturnSignal.h"
+#import "ReactiveObjC.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *accountField;
@@ -33,7 +32,7 @@
     RACSignal *combinSignal = [RACSignal combineLatest:@[self.accountField.rac_textSignal, self.pwdField.rac_textSignal] reduce:^id(NSString *account, NSString *pwd){ //reduce里的参数一定要和combineLatest数组里的一一对应。
         // block: 只要源信号发送内容，就会调用，组合成一个新值。
         NSLog(@"%@ %@", account, pwd);
-        return @(account.length && pwd.length);
+        return @(account.length && (pwd.length > 5));
     }];
     
     //    // 订阅信号
