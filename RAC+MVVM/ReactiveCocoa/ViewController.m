@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
-#import "RACReturnSignal.h"
+#import "ReactiveObjC.h"
 #import "loginViewModel.h"
 
 @interface ViewController ()
@@ -81,7 +80,7 @@
     [[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
         NSLog(@"点击登录按钮");
         // 处理登录事件
-        [command execute:nil];
+        [command execute:x];
         
     }];
     
