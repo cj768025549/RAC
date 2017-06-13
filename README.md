@@ -47,20 +47,20 @@ NSLog(@"======%@", x);
 **总结**
 
 
-* .核心：
-* .核心：信号类
-* .信号类的作用：只要有数据改变就会把数据包装成信号传递出去
-* .只要有数据改变就会有信号发出
-* .数据发出，并不是信号类发出，信号类不能发送数据
-* .使用方法：
-* .创建信号
-* .订阅信号
-* .实现思路：
-* .当一个信号被订阅，创建订阅者，并把nextBlock保存到订阅者里面。
-* .创建的时候会返回 [RACDynamicSignal createSignal:didSubscribe];
-* .调用RACDynamicSignal的didSubscribe
-* .发送信号[subscriber sendNext:value];
-* .拿到订阅者的nextBlock调用
+* 核心：
+* 核心：信号类
+* 信号类的作用：只要有数据改变就会把数据包装成信号传递出去
+* 只要有数据改变就会有信号发出
+* 数据发出，并不是信号类发出，信号类不能发送数据
+* 使用方法：
+* 创建信号
+* 订阅信号
+* 实现思路：
+* 当一个信号被订阅，创建订阅者，并把nextBlock保存到订阅者里面。
+* 创建的时候会返回 [RACDynamicSignal createSignal:didSubscribe];
+* 调用RACDynamicSignal的didSubscribe
+* 发送信号[subscriber sendNext:value];
+* 拿到订阅者的nextBlock调用
 */
 
 #### RACSubject
