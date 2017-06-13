@@ -7,6 +7,7 @@
 //
 
 #import "loginViewModel.h"
+#import "NetworkManager.h"
 
 @implementation loginViewModel
 
@@ -30,13 +31,7 @@
         // 发送登录请求
         NSLog(@"发送登录请求");
         return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
-                // 发送数据
-                [subscriber sendNext:@"发送登录的数据"];
-                [subscriber sendCompleted]; // 一定要记得写
-            });
-            
+            [NetworkManager requestWithRACSubscriber:subscriber];
             return nil;
         }];
     }];
@@ -51,7 +46,7 @@
     // 4.处理登录执行过程
     [[_loginCommand.executing skip:1] subscribeNext:^(id x) { // 跳过第一步（"没有执行"这步）
         if ([x boolValue] == YES) {
-            NSLog(@"--正在执行");
+            NSLog(@"--正在执行");//第一次在初始化的时候调用
             // 显示蒙版
         }else { //执行完成
             NSLog(@"执行完成");

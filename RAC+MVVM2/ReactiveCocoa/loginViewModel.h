@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ReactiveCocoa.h"
+#import "ReactiveObjC.h"
+#import "bookModel.h"
 
 @interface loginViewModel : NSObject
 // 处理按钮是否允许点击

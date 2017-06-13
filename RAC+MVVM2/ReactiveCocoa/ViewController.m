@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
-#import "RACReturnSignal.h"
+#import "ReactiveObjC.h"
 #import "loginViewModel.h"
 
 @interface ViewController ()
@@ -38,7 +37,6 @@
     // MVVM:开发中先创建VM，把业务逻辑处理好，然后在控制器里执行
     [self bindViewModel];
     [self loginEvent];
-       
 }
 
 - (void)bindViewModel {
@@ -47,6 +45,7 @@
     RAC(self.loginVM, pwd) = self.pwdField.rac_textSignal;
     
 }
+
 - (void)loginEvent {
     // 1.处理文本框业务逻辑--- 设置按钮是否能点击
     RAC(self.loginBtn, enabled) = self.loginVM.loginEnableSignal;
@@ -54,11 +53,27 @@
     [[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
         NSLog(@"点击登录按钮");
         // 处理登录事件
-        [self.loginVM.loginCommand execute:nil];
-        
+        [[self.loginVM.loginCommand execute:nil]subscribeNext:^(id  _Nullable x) {
+            NSLog(@"请求结束，读取数据，刷新UI");
+        }];
+    }];
+    
+    // 3.登录命令的信号的执行过程
+    [[self.loginVM.loginCommand.executing skip:1] subscribeNext:^(id x) { // 跳过第一步（"没有执行"这步）
+        if ([x boolValue] == YES) {
+            NSLog(@"--正在执行,显示loading");//第一次在初始化的时候调用
+            // 显示蒙版
+        }else { //执行完成
+            NSLog(@"执行完成");
+            // 取消蒙版
+        }
+    }];
+    
+    // 4.获取登录命令返回的信号源
+    [self.loginVM.loginCommand.executionSignals.switchToLatest subscribeNext:^(id  _Nullable x) {
+        NSLog(@"请求结束，读取数据，刷新UI");
     }];
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

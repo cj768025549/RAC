@@ -1,4 +1,6 @@
 
 use_frameworks!
 
-pod 'ReactiveCocoa', '~> 4.0.4-alpha-4'
+target 'RACCommand' do
+    pod 'ReactiveObjC', '~> 3.0.0'
+end

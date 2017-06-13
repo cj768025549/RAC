@@ -40,7 +40,7 @@
                 
                 [subscriber sendNext:modelArr];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                
+                [subscriber sendError:error];
             }];
             return nil;
         }];

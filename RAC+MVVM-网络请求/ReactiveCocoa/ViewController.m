@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
-#import "RACReturnSignal.h"
+#import "ReactiveObjC.h"
 #import "RequestViewModel.h"
 
 @interface ViewController ()
@@ -38,6 +37,56 @@
         NSLog(@"%@",x);
     }];
     
+}
+
+- (IBAction)clickButtonAction:(id)sender {
+    RACSignal *requestSingal = [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager GET:@"https://api.douban.com/v2/book/search" parameters:@{@"q":@"帅哥"} progress:^(NSProgress * _Nonnull downloadProgress) {
+            
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [responseObject writeToFile:@"/Users/wang/Desktop/plist/sg.plist" atomically:YES];
+            // 请求成功的时候调用
+            //                NSLog(@"%@", responseObject);
+            // 在这里就可以拿到数据，将其丢出去
+            NSArray *dictArr = responseObject[@"books"];
+            // 便利books字典数组，将其映射为模型数组
+            NSArray *modelArr = [[dictArr.rac_sequence map:^id(id value) {
+                return [[NSObject alloc] init];
+            }] array];
+            
+            [subscriber sendNext:modelArr];
+            NSLog(@"请求结束");
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [subscriber sendError:error];
+        }];
+        return nil;
+    }];
+    
+//    [requestSingal subscribeNext:^(id  _Nullable x) {
+//        NSLog(@"");
+//    }];
+//    
+//    [requestSingal subscribeNext:^(id  _Nullable x) {
+//        NSLog(@"");
+//    }];
+//    
+//    [requestSingal subscribeNext:^(id  _Nullable x) {
+//        NSLog(@"");
+//    }];
+    
+    RACMulticastConnection *connection = [requestSingal multicast:[RACReplaySubject subject]];
+    [connection connect];
+    
+    [connection.signal subscribeNext:^(id  _Nullable x) {
+        NSLog(@"");
+
+    }];
+    
+    [connection.signal subscribeNext:^(id  _Nullable x) {
+        NSLog(@"");
+
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

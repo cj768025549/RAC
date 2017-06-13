@@ -1,5 +1,10 @@
 
 use_frameworks!
 
-pod 'ReactiveCocoa', '~> 4.0.2-alpha-1'
-pod 'AFNetworking', '~> 3.1.0'
+target 'ReactiveCocoa' do
+    
+    pod 'ReactiveObjC', '~> 3.0.0'
+    pod 'AFNetworking', '~> 3.1.0'
+
+end
+    

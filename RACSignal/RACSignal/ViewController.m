@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
+#import "ReactiveObjC.h"
 
 @interface ViewController ()
 
@@ -29,6 +29,7 @@
         return [RACDisposable disposableWithBlock:^{
             NSLog(@"取消订阅");
         }];
+        
     }];
     // 2. 订阅信号
     //subscribeNext

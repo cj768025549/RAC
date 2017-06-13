@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
+#import "ReactiveObjC.h"
 
 @interface ViewController ()
 
@@ -26,7 +26,7 @@
     
 }
 
-- (void)test // 普通写法, 这样的缺点是：没订阅一次信号就得重新创建并发送请求，这样很不友好
+- (void)test // 普通写法, 这样的缺点是：每订阅一次信号就得重新创建并发送请求，这样很不友好
 {
     RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         // didSubscribeblock中的代码都统称为副作用。

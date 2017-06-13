@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ReactiveCocoa.h"
+#import "ReactiveObjC.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *label;
@@ -25,8 +25,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self test4];
-    
+//    [self test];
+    [self testAndtest2];
 }
 
 /**
@@ -36,11 +36,25 @@
 {
     // RAC:把一个对象的某个属性绑定一个信号,只要发出信号,就会把信号的内容给对象的属性赋值
     // 给label的text属性绑定了文本框改变的信号
+    // 以下三种写法可以达到同样的效果
     RAC(self.label, text) = self.textField.rac_textSignal;
-//    [self.textField.rac_textSignal subscribeNext:^(id x) {
-//        self.label.text = x;
-//    }];
-
+    
+    [self.textField.rac_textSignal subscribeNext:^(NSString *text) {
+        if (text.length > 0) {
+            self.label.text = text;
+        }else{
+            self.label.text = @"label";
+        }
+    }];
+    
+    [RACObserve(self.textField, text) subscribeNext:^(id x) {
+        NSLog(@"====textField的文字变了");
+    }];
+    
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:UITextFieldTextDidChangeNotification object:nil] subscribeNext:^(NSNotification * _Nullable x) {
+        UITextField *textField = x.object;
+        self.label.text = textField.text;
+    }];
 }
 
 /**
@@ -60,7 +74,7 @@
     [RACObserve(self.label, text) subscribeNext:^(id x) {
         NSLog(@"====label的文字变了");
     }];
-    
+
 }
 
 /**
